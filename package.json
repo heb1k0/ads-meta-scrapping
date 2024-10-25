@@ -1,0 +1,15 @@
+{
+  "name": "carlos-scrapping",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch app/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "playwright": "^1.48.1"
+  }
+}
