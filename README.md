@@ -73,8 +73,10 @@ MIT License
 Dentro del archivo `index.js`, puedes modificar los siguientes valores según tus preferencias:
 
 ```js
-const PAIS = "MX";
-let PALABRAS_CLAVE = "empleo, whatsapp";
+const PAIS = "ES"; // Cambia esto por el país que desees
+// Puedes cambiar el país a otro que quieras, por ejemplo: "CO" para Colombia, "AR" para Argentina, etc.
+let PALABRAS_CLAVE = "Coches de segunda mano"; // Cambia esto por la palabra clave que desees buscar
+// Puedes cambiar la palabra clave a otra que quieras, por ejemplo: "Coches nuevos", "Móviles", etc.
 ```
 
 - `PAIS`: Código del país desde donde deseas obtener los anuncios (por ejemplo: `ES`, `AR`, `CO`...).
