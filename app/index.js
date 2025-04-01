@@ -1,23 +1,30 @@
 const { chromium } = require('playwright');
 const fs = require('fs'); // Importamos el módulo fs
 
+
+const PAIS = "MX";
+let PALABRAS_CLAVE = "empleo, whatsapp";
+
 (async () => {
     // Inicia el navegador
     const browser = await chromium.launch({ headless: false }); // headless: true significa sin interfaz gráfica
     const page = await browser.newPage();
 
     // Navega a la página que deseas scrapear
-    await page.goto('https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=MX&media_type=all&q=empleo%2C%20whatsapp&search_type=keyword_unordered');
+
+    PALABRAS_CLAVE = PALABRAS_CLAVE.replace(/ /g, '%20');
+
+    await page.goto(`https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=${PAIS}&media_type=all&q=${PALABRAS_CLAVE}&search_type=keyword_unordered`);
 
     // Extrae el título de la página
     const pageTitle = await page.title();
     console.log(`Título de la página: ${pageTitle}`);
 
     // Espramos a que esté el elemento .x1dr75xp
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(1000);
 
     // Scrolls 5 veces
-    let scroll = 70;
+    let scroll = 50;
     while (scroll > 0) {
         await page.evaluate(() => {
             window.scrollBy(0, window.innerHeight);
@@ -58,6 +65,9 @@ const fs = require('fs'); // Importamos el módulo fs
 
         ads = adsUnique.filter(ad => ad.title !== 'Iniciar sesión' && ad.title !== 'Registrarte');
 
+        console.log("Ads", ads.length);
+        console.log("Ads varios", ads);
+
         return ads;
     });
 
@@ -69,6 +79,7 @@ const fs = require('fs'); // Importamos el módulo fs
         let Data = {
             title: ad.title,
             enlace: ad.enlace,
+            phone: false,
             email: false,
             web: false
         }
@@ -83,6 +94,7 @@ const fs = require('fs'); // Importamos el módulo fs
 
         const spans = await element.$$('.x193iq5w .xeuugli .x13faqbe');
         const enlaces = await element.$$('a[target="_blank"]');
+
 
         for (const enlace of enlaces) {
             const href = await enlace.getAttribute('href');
@@ -108,20 +120,27 @@ const fs = require('fs'); // Importamos el módulo fs
                     }
                 }
             }
-        }
 
+            if (text.includes('+')) {
+                Data.phone = text;
+                Data.phone = Data.phone.replace(/\D/g, '');
+                elementEncontrado = true;
+                break;
+            }
+        }
+        console.log(Data);
         Datos.push(Data);
     }
 
     // Guardar datos en CSV
-    const csvHeader = 'Title,Enlace,Emails,Web\n';
+    const csvHeader = 'Title,Enlace,Emails,Phone,Web\n';
     const csvRows = Datos.map(data => {
-        return `"${data.title}","${data.enlace}","${data.email}","${data.web}"`;
+        return `"${data.title}","${data.enlace}","${data.email}","${data.phone}","${data.web}"`;
     });
 
     const csvContent = csvHeader + csvRows.join('\n');
 
-    fs.writeFileSync('resultados.csv', csvContent, 'utf8');
+    fs.writeFileSync('resultados150.csv', csvContent, 'utf8');
     console.log('Datos guardados en resultados.csv');
 
     await browser.close();
