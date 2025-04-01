@@ -2,8 +2,10 @@ const { chromium } = require('playwright');
 const fs = require('fs'); // Importamos el módulo fs
 
 
-const PAIS = "MX";
-let PALABRAS_CLAVE = "empleo, whatsapp";
+const PAIS = "ES"; // Cambia esto por el país que desees
+// Puedes cambiar el país a otro que quieras, por ejemplo: "CO" para Colombia, "AR" para Argentina, etc.
+let PALABRAS_CLAVE = "Coches de segunda mano"; // Cambia esto por la palabra clave que desees buscar
+// Puedes cambiar la palabra clave a otra que quieras, por ejemplo: "Coches nuevos", "Móviles", etc.
 
 (async () => {
     // Inicia el navegador
